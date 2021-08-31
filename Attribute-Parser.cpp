@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 using namespace std;
+//To count the spaces indexes
 vector<int> spaces(string s){
     vector<int> spaces;
     for (int i = 0 ;i<s.length() ; i++) {
@@ -17,6 +18,7 @@ vector<int> spaces(string s){
     }
     return spaces;
 }
+//To get the equal indexes and we can also know how many values will be there
 vector<int> equals(string s){
     vector<int> spaces;
     for (int i = 0 ;i<s.length() ; i++) {
@@ -28,22 +30,7 @@ vector<int> equals(string s){
     }
     return spaces;
 }
-string string_upto(string s,int x){
-    string l = "";
-    for (int i = 0; i<x; i++) {
-        char c = s[i];
-        l+=c;
-    }
-    return l;
-}
-int length_upto(string s, int x){
-    int length = 0;
-    for (int i = 0; i<x; i++) {
-        length+=1;
-    }
-    length+=1;
-    return length;
-}
+//To get the length upto a char for ex:- "
 vector<int> length_upto(string s, char c){
     vector<int> length;
     int lengths = 0;
@@ -56,6 +43,7 @@ vector<int> length_upto(string s, char c){
     }
     return length;
 }
+//Remove spaces in string
 string space_remove(string s){
     string l = "";
     for (char c:s) {
@@ -67,6 +55,7 @@ string space_remove(string s){
     }
     return l;
 }
+//Map storing tagname+name+value
 map<string,string> input_str(string s , vector<int> equal , vector<int> spaces,string tagname){
     map<string, string> m;
     for (int i = 0; i<equal.size(); i++) {
@@ -75,6 +64,7 @@ map<string,string> input_str(string s , vector<int> equal , vector<int> spaces,s
         int length_upto_secondquote = length_upto_quote[1];
         string value_value = s.substr(equal[0]+1,length_upto_secondquote);
         string value_value_opt = space_remove(value_value); 
+        value_value_opt = value_value_opt.substr(1,value_value_opt.length()-2);
         string value_name_opt = space_remove(value_name);
         string value_name_optim = tagname+value_name_opt;
         s.erase(0,length_upto_secondquote+1);
@@ -82,6 +72,7 @@ map<string,string> input_str(string s , vector<int> equal , vector<int> spaces,s
     }
     return m;
 }
+//Split the query from the last fullstop
 string split_till(string s){
     string k = "";
     int stops = 0;
@@ -96,6 +87,7 @@ string split_till(string s){
     k = s.substr(laststop,(s.size()-laststop)+1);
     return k;
 }
+//Remove tilde
 string remove_char(string s){
     string l = "";
     for (int i = 0; i<s.size(); i++) {
@@ -110,14 +102,20 @@ string remove_char(string s){
 int main() {
     int n,query;
     cin>>n>>query;
+    //Take the remaining line to prevent other input taking it
     string s;
     getline(cin,s);
+    //Answers container
     vector<string> answers;
+    //Total iterations which will take place
     int total_iterations = n+query;
     for (int i = 0; i<total_iterations; i++) {
+        //Take the whole line
         string l; 
         getline(cin,l);
+        //MAP STORING values
         map<string,string> map_global;
+        //If starting is with this then it's a line because order is not guaranteed that after lines query phase will come
         if(l[0]=='<'){
             //Input Phase
             string y = l.substr(1,l.length()-2);
@@ -126,7 +124,7 @@ int main() {
                 vector<int> space_indexes = spaces(y);
                 vector<int> equal_indexes = equals(y);
                 int first_space = space_indexes[0];
-                string tagnam = y.substr(0,first_space);
+                string tagnam = y.substr(0,first_space+1);
                 string tagname = space_remove(tagnam);
                 string rest = y.substr(first_space+1);
                 space_indexes.erase(space_indexes.begin());
