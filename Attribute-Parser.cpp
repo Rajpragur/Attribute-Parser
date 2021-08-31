@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <map>
 #include <string>
+#include <iterator>
 using namespace std;
 //To count the spaces indexes
 vector<int> spaces(string s){
@@ -56,16 +57,19 @@ string space_remove(string s){
     return l;
 }
 //Map storing tagname+name+value
-map<string,string> input_str(string s , vector<int> equal , vector<int> spaces,string tagname){
+map<string,string> input_str(string s,string tagname){
     map<string, string> m;
+    vector<int> equal = equals(s);
+    vector<int> space = spaces(s);
     for (int i = 0; i<equal.size(); i++) {
         string value_name = s.substr(0,equal[0]+1);
-        vector<int> length_upto_quote = length_upto(s,'\"');
+        vector<int> length_upto_quote = length_upto(s,'"');
         int length_upto_secondquote = length_upto_quote[1];
         string value_value = s.substr(equal[0]+1,length_upto_secondquote);
         string value_value_opt = space_remove(value_value); 
         value_value_opt = value_value_opt.substr(1,value_value_opt.length()-2);
         string value_name_opt = space_remove(value_name);
+        value_name_opt.erase(value_name_opt.begin()+value_name_opt.length()-1);
         string value_name_optim = tagname+value_name_opt;
         s.erase(0,length_upto_secondquote+1);
         m.insert(pair<string,string>(value_name_optim,value_value_opt));
@@ -85,14 +89,14 @@ string split_till(string s){
     }
     if(stops!=0){
     int laststop = fullstops[fullstops.size()-1];
-    k = s.substr(laststop+1,s.size()-laststop);
+    k = s.substr(laststop+1,s.length()-laststop);
     } else{
         k = s;
     }
     return k;
 }
 //Remove tilde
-string remove_char(string s){
+string remove_tilde(string s){
     string l = "";
     for (int i = 0; i<s.size(); i++) {
         if (s[i]!='~') {
@@ -132,7 +136,7 @@ int main() {
                 string tagname = space_remove(tagnam);
                 string rest = y.substr(first_space+1);
                 space_indexes.erase(space_indexes.begin());
-                map<string, string> m1 = input_str(rest, equal_indexes, space_indexes,tagname);
+                map<string, string> m1 = input_str(rest,tagname);
                 map_global = m1;
             } else{
                 //Closing input phase
@@ -141,12 +145,12 @@ int main() {
         } else{
             //Query Phase
             string i = split_till(l);
-            string mono = remove_char(i);
-            auto it = map_global.find(mono);
-            if (it==map_global.end()) {
-                answers.push_back("Not Found");
-            } else{
-                answers.push_back(it->second);
+            string mono = remove_tilde(i);
+            try {
+                string value = map_global.at(mono);
+                answers.push_back(value);
+            } catch (const out_of_range&) {
+                answers.push_back("Not Found!");
             }
         }
     }
