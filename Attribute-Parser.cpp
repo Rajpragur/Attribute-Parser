@@ -68,7 +68,7 @@ map<string,string> input_str(string s , vector<int> equal , vector<int> spaces,s
         string value_name_opt = space_remove(value_name);
         string value_name_optim = tagname+value_name_opt;
         s.erase(0,length_upto_secondquote+1);
-        m.insert(value_name_optim,value_value_opt);
+        m.insert(pair<string,string>(value_name_optim,value_value_opt));
     }
     return m;
 }
@@ -83,8 +83,12 @@ string split_till(string s){
             fullstops.push_back(i);
         }
     }
+    if(stops!=0){
     int laststop = fullstops[fullstops.size()-1];
-    k = s.substr(laststop,(s.size()-laststop)+1);
+    k = s.substr(laststop+1,s.size()-laststop);
+    } else{
+        k = s;
+    }
     return k;
 }
 //Remove tilde
