@@ -1,11 +1,4 @@
-#include <cmath>
-#include <cstdio>
-#include <vector>
-#include <iostream>
-#include <algorithm>
-#include <map>
-#include <string>
-#include <iterator>
+#include <bits/stdc++.h>
 using namespace std;
 //To count the spaces indexes
 vector<int> spaces(string s){
